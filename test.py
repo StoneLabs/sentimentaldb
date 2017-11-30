@@ -62,12 +62,11 @@ X_train, X_test, y_train, y_test = train_test_split(X_seq, y_raw, test_size=test
 #
 main_input = Input(shape=(100,), dtype='int32', name='main_input')  #Create input for sequence
 embedding = Embedding(output_dim=30, input_dim=X_voc_size,          #Create embedding layer with 2D output
-                    input_length=100, name="layer1")(main_input) 
-masking = Masking(mask_value=0)(embedding)
+                    input_length=100, name="layer1", mask_zero=True)(main_input) 
 lstm_out = LSTM(100, kernel_regularizer=l2(0.05),                   #And pass this output to the LSTM
                     recurrent_regularizer=l2(0.05),
                     bias_regularizer=l2(0.05),
-                    name="layer2")(masking)
+                    name="layer2")(embedding)
 dense = Dense(50, kernel_regularizer=l2(0.05),                   #And pass values to a dense layer
                   bias_regularizer=l2(0.05),
                   name="layer3")(lstm_out)
